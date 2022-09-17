@@ -26,7 +26,7 @@ const operacaoPendente = () => operador !== undefined;
 // FUNCAO CRIADA PARA FAZER OS CALCULOS NUMEROS E OPERADORES
 const calcular = () => {
   if (operacaoPendente()) {
-    const numeroAtual = parseFloat(display.textContent);
+    const numeroAtual = parseFloat(display.textContent.replace(",", "."));
     novoNumero = true;
     const resultado = eval(`${numeroAnterior} ${operador} ${numeroAtual}`);
     atualizarDisplay(resultado);
@@ -49,7 +49,7 @@ const calcular = () => {
 // FUNCAO CRIADA PARA ATUALIZAR O DISPLAY
 const atualizarDisplay = (texto) => {
   if (novoNumero) {
-    display.textContent = texto;
+    display.textContent = texto.toLocaleString("BR");
     novoNumero = false;
   } else {
     display.textContent += texto;
@@ -72,7 +72,7 @@ const selecionarOperador = (event) => {
     calcular();
     novoNumero = true;
     operador = event.target.textContent;
-    numeroAnterior = parseFloat(display.textContent);
+    numeroAnterior = parseFloat(display.textContent.replace(",", "."));
   }
 };
 operadores.forEach((operadore) =>
@@ -128,3 +128,34 @@ const inserirDecimal = () => {
   }
 };
 decimal.addEventListener("click", inserirDecimal);
+
+const mapaTeclado = {
+  0: "tecla0",
+  1: "tecla1",
+  2: "tecla2",
+  3: "tecla3",
+  4: "tecla4",
+  5: "tecla5",
+  6: "tecla6",
+  7: "tecla7",
+  8: "tecla8",
+  9: "tecla9",
+  "/": "operadorDividir",
+  "*": "operadorMultiplicar",
+  "-": "operadorSubtrair",
+  "+": "operadorAdicionar",
+  "=": "igual",
+  Enter: "igual",
+  Backspace: "backspace",
+  c: "limparDisplay",
+  Escape: "limparCalculo",
+  ",": "decimal",
+};
+
+const mapearTeclado = (event) => {
+  const tecla = event.key;
+  const teclaPermitida = () => Object.keys(mapaTeclado).indexOf(tecla) !== -1;
+
+  if (teclaPermitida()) document.getElementById(mapaTeclado[tecla]).click();
+};
+document.addEventListener("keydown", mapearTeclado);
